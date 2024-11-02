@@ -25,7 +25,12 @@ def handle_message(update, context):
     # respons back to the user with its chat_id
     update.message.reply_text(f"Your chat ID is {chat_id}")
 
+
 def main():
+    """
+    Main function to set up the bot and start polling for updates.
+    """
+    # initialize the Updater with your bot token
     updater = Updater(TELEGRAM_BOT_TOKEN, use_context=True)
     dp = updater.dispatcher # registers handlers and dispatches incoming updates to them.
 

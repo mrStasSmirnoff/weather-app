@@ -1,0 +1,45 @@
+{
+    "coord": {
+        "lon": 6.95,
+        "lat": 50.9333
+    },
+    "weather": [
+        {
+            "id": 802,
+            "main": "Clouds",
+            "description": "scattered clouds",
+            "icon": "03n"
+        }
+    ],
+    "base": "stations",
+    "main": {
+        "temp": 9.17,
+        "feels_like": 7.18,
+        "temp_min": 7.69,
+        "temp_max": 10.54,
+        "pressure": 1031,
+        "humidity": 89,
+        "sea_level": 1031,
+        "grnd_level": 1024
+    },
+    "visibility": 10000,
+    "wind": {
+        "speed": 3.6,
+        "deg": 60
+    },
+    "clouds": {
+        "all": 40
+    },
+    "dt": 1730573755,
+    "sys": {
+        "type": 2,
+        "id": 2000227,
+        "country": "DE",
+        "sunrise": 1730528782,
+        "sunset": 1730563503
+    },
+    "timezone": 3600,
+    "id": 2886242,
+    "name": "Cologne",
+    "cod": 200
+}

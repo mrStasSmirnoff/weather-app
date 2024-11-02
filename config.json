@@ -1,0 +1,18 @@
+{
+    "greetings": {
+        "Me": "Good morning, Stanislav",
+        "Mom": "Доброе Утро, Матушка! Прогноз погоды на сегодня"
+    },
+    "cities": {
+        "Me": "Cologne",
+        "Mom": "Ufa"
+    },
+    "media": {
+        "Me": "",
+        "Mom": ""
+    },
+    "extras": {
+        "Me": "",
+        "Mom": ""
+    }
+}
