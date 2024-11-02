@@ -41,6 +41,8 @@ def get_weather(city):
         url = (
             f"https://api.openweathermap.org/data/2.5/weather?q={city}&APPID={OPENWEATHER_API_KEY}&units=metric"
         )
+        # 5d, 3h window forecast call
+        #https://api.openweathermap.org/data/2.5/forecast?q=Cologne&APPID=&units=metric
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
