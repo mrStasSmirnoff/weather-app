@@ -139,6 +139,6 @@ def schedule_jobs():
         logger.info("Scheduler stopped.")
 
 if __name__ == '__main__':
-    get_weather()
+    schedule_jobs()
     #send_daily_message("Me")
     #send_daily_message("Mom")
