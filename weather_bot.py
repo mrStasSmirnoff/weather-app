@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 OPENWEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 CHAT_ID_MY = os.getenv('CHAT_ID_MY')
-CHAT_ID_MOM = os.getenv('CHAT_ID_MOTHER')
+CHAT_ID_MOM = os.getenv('CHAT_ID_MOM')
 TIMEZONE_MY = os.getenv('TIMEZONE_MY')
 TIMEZONE_MOM = os.getenv('TIMEZONE_MOM')
 
@@ -141,3 +141,4 @@ def schedule_jobs():
 if __name__ == '__main__':
     #get_weather("Cologne")
     send_daily_message("Me")
+    send_daily_message("Mom")
