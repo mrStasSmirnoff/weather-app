@@ -2,12 +2,14 @@ import os
 import json
 import logging
 from datetime import datetime
+import threading
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 import pytz
 import requests
 from telegram import Bot
 from telegram.error import TelegramError
 from dotenv import load_dotenv
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 load_dotenv()
 
@@ -106,7 +108,7 @@ def schedule_jobs():
     """
     Schedules the daily messages using APScheduler.
     """
-    scheduler = BlockingScheduler(timezone=pytz.utc)
+    scheduler = BackgroundScheduler(timezone=pytz.utc)
 
     # my scheduler
     timezone_you = pytz.timezone(TIMEZONE_MY)
@@ -138,7 +140,27 @@ def schedule_jobs():
     except (KeyboardInterrupt, SystemExit):
         logger.info("Scheduler stopped.")
 
+def run_web_server():
+    """
+    Starts a simple HTTP server to satisfy Render's requirement for an open port for Free Tier hosting
+    """
+    port = int(os.environ.get('PORT', 10000))
+    server = HTTPServer(('0.0.0.0', port), SimpleHTTPRequestHandler)
+    logger.info(f"Starting web server on port {port}")
+    server.serve_forever()
+
+
 if __name__ == '__main__':
+    # start a webserver in a separate thread
+    web_server_thread = threading.Thread(target=run_web_server)
+    web_server_thread.daemon = True
+    web_server_thread.start()
+
     schedule_jobs()
-    #send_daily_message("Me")
-    #send_daily_message("Mom")
+
+    # keep the main thread runnning
+    try:
+        while True:
+            pass
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Application stopped.")
