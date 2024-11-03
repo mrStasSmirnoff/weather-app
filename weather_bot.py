@@ -3,7 +3,7 @@ import json
 import logging
 from datetime import datetime
 import threading
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import pytz
 import requests
 from telegram import Bot
@@ -140,12 +140,24 @@ def schedule_jobs():
     except (KeyboardInterrupt, SystemExit):
         logger.info("Scheduler stopped.")
 
+
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"Weather Bot is running.")
+
+    def log_mesage(self, format, *args):
+        return
+
+
 def run_web_server():
     """
     Starts a simple HTTP server to satisfy Render's requirement for an open port for Free Tier hosting
     """
     port = int(os.environ.get('PORT', 10000))
-    server = HTTPServer(('0.0.0.0', port), SimpleHTTPRequestHandler)
+    server = HTTPServer(('0.0.0.0', port), SimpleHandler)
     logger.info(f"Starting web server on port {port}")
     server.serve_forever()
 
