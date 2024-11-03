@@ -63,5 +63,22 @@ def get_weather(city):
         return f"An error occurred while fetching weather data for {city}."
 
 
+def send_message(chat_id, message, photo_url=None, videl_url=None):
+    """
+
+    """
+    try:
+        if photo_url:
+            bot.send_photo(chat_id=chat_id, photo=photo_url)
+            logger.info(f"Send photo to chat ID {chat_id}")
+        else:
+            bot.send_message(chat_id=chat_id, text=message)
+            logger.info(f"Send message to chat ID {chat_id}")
+
+    except TelegramError as e:
+        logger.error(f"Failed to send the message to chat ID {chat_id}: {e}")
+
+
 if __name__ == '__main__':
-    get_weather("Cologne")
+    #get_weather("Cologne")
+    pass
