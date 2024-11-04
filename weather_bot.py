@@ -1,4 +1,6 @@
 import os
+import sys
+import time
 import json
 import logging
 from datetime import datetime
@@ -17,8 +19,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s:%(message)s',
     handlers=[
-        logging.FileHandler("weather_bot.log"),
-        logging.StreamHandler()
+        logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
@@ -89,19 +90,23 @@ def send_daily_message(recipient):
     """
     Constructs and sends the daily message to the specified recipient.
     """
-    greetings = config['greetings'].get(recipient, "Доброе утро!")
-    city = config['cities'].get(recipient, "Unknown city")
-    media_url = config['media'].get(recipient, None)
-    extra_content = config['extras'].get(recipient, "")
-    chat_id = CHAT_ID_MY if recipient == 'Me' else CHAT_ID_MOM
+    logger.info(f"Executing send_daily_message for recipient: {recipient}")
+    try:
+        greetings = config['greetings'].get(recipient, "Доброе утро!")
+        city = config['cities'].get(recipient, "Unknown city")
+        media_url = config['media'].get(recipient, None)
+        extra_content = config['extras'].get(recipient, "")
+        chat_id = CHAT_ID_MY if recipient == 'Me' else CHAT_ID_MOM
 
-    weather_info = get_weather(city)
+        weather_info = get_weather(city)
 
-    msg = f"{greetings}\n\n{weather_info}"
-    if extra_content:
-        msg += f"\n\n{extra_content}"
+        msg = f"{greetings}\n\n{weather_info}"
+        if extra_content:
+            msg += f"\n\n{extra_content}"
 
-    send_message(chat_id, msg, media_url)
+        send_message(chat_id, msg, media_url)
+    except Exception as e:
+        logger.exception(f"Error in send_daily_message for recipient {recipient}: {e}")
 
 
 def schedule_jobs():
@@ -114,26 +119,26 @@ def schedule_jobs():
     timezone_you = pytz.timezone(TIMEZONE_MY)
     scheduler.add_job(
         send_daily_message,
-        args=["Me"],
+        args=['Me'],
         trigger='cron',
         hour=7,
         minute=8,
         timezone=timezone_you,
         id='my_cron_job'
     )
-    logger.info("Scheduled daily message for 'you' at 7 AM in timezone: " + TIMEZONE_MY)
+    logger.info("Scheduled daily message for 'Me' at 7 AM in timezone: " + TIMEZONE_MY)
 
     timezone_mother = pytz.timezone(TIMEZONE_MOM)
     scheduler.add_job(
         send_daily_message,
         trigger='cron',
-        args=['mother'],
+        args=['Mom'],
         hour=7,
         minute=0,
         timezone=timezone_mother,
         id='job_mother'
     )
-    logger.info("Scheduled daily message for 'mother' at 7 AM in timezone: " + TIMEZONE_MOM)
+    logger.info("Scheduled daily message for 'Mom' at 7 AM in timezone: " + TIMEZONE_MOM)
 
     try:
         scheduler.start()
@@ -148,7 +153,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Weather Bot is running.")
 
-    def log_mesage(self, format, *args):
+    def log_message(self, format, *args):
         return
 
 
@@ -163,6 +168,7 @@ def run_web_server():
 
 
 if __name__ == '__main__':
+    logger.info("Application is starting...")
     # start a webserver in a separate thread
     web_server_thread = threading.Thread(target=run_web_server)
     web_server_thread.daemon = True
@@ -173,6 +179,6 @@ if __name__ == '__main__':
     # keep the main thread runnning
     try:
         while True:
-            pass
-    except (KeyboardInterrupt, SystemExit):
-        logger.info("Application stopped.")
+            time.sleep(1)
+    except Exception as e:
+        logger.exception(f"An unhandled exception occurred: {e}")
